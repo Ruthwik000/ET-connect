@@ -1,6 +1,7 @@
 import { Bell, Menu, Settings, Bookmark, LogOut, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
+import { logOut } from '../firebase/auth'
 
 export default function TopNav() {
   const navigate = useNavigate()
@@ -12,16 +13,21 @@ export default function TopNav() {
     setIsSidebarOpen(false)
   }
 
-  const handleLogout = () => {
-    // Add logout logic here
+  const handleLogout = async () => {
+    const result = await logOut()
     setIsSidebarOpen(false)
-    navigate('/home')
+    
+    if (result.success) {
+      navigate('/')
+    } else {
+      alert('Failed to logout. Please try again.')
+    }
   }
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 shadow-sm">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between relative">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 h-16 flex items-center relative">
           {/* Left - Menu Button */}
           <button 
             onClick={() => setIsSidebarOpen(true)}
@@ -31,14 +37,23 @@ export default function TopNav() {
           </button>
 
           {/* Center - ImpactFlow */}
-          <h1 className="text-xl sm:text-2xl font-bold text-primary absolute left-1/2 transform -translate-x-1/2 tracking-widest uppercase" style={{ fontFamily: 'Georgia, serif', letterSpacing: '0.15em' }}>
+          <h1 
+            className="text-xl sm:text-2xl font-bold text-primary tracking-widest uppercase" 
+            style={{ 
+              fontFamily: 'Georgia, serif', 
+              letterSpacing: '0.15em',
+              position: 'absolute',
+              left: '50%',
+              transform: 'translateX(-50%)'
+            }}
+          >
             ImpactFlow
           </h1>
 
           {/* Right - Notification Bell */}
           <button 
             onClick={() => navigate('/notifications')}
-            className="relative p-2 hover:bg-gray-100 rounded-xl transition-smooth btn-press z-10"
+            className="relative p-2 hover:bg-gray-100 rounded-xl transition-smooth btn-press z-10 ml-auto"
           >
             <Bell size={24} className="text-primary" />
             {hasHighImpactNews && (

@@ -7,7 +7,7 @@ export default function Landing() {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <header className="px-6 py-4 border-b border-gray-200">
+      <header className="px-6 py-4 border-b border-gray-200" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
         <h1 className="text-2xl font-bold text-primary tracking-widest uppercase" style={{ fontFamily: 'Georgia, serif', letterSpacing: '0.15em' }}>
           ImpactFlow
         </h1>
