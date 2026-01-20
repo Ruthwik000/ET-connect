@@ -2,6 +2,7 @@ import { NavLink } from 'react-router-dom'
 import { Home, Compass, MessageCircle, User } from 'lucide-react'
 
 export default function BottomNav() {
+  
   const navItems = [
     { path: '/home', icon: Home, label: 'Home' },
     { path: '/explore', icon: Compass, label: 'Explore' },

@@ -80,38 +80,15 @@ export default function Home() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-      <div className="mb-8 fade-in">
-        <h2 className="text-3xl font-bold text-primary mb-2">Your Impact Overview</h2>
-        <p className="text-base text-secondary">Personalized news insights that matter to you</p>
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-        <div className="bg-gradient-to-br from-warning/10 to-warning/5 rounded-xl border border-warning/20 p-5 card-hover shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-secondary uppercase tracking-wide mb-1">Today</p>
-              <p className="text-lg font-bold text-primary">2 Policy Changes</p>
-              <p className="text-xs text-secondary mt-1">Affect you directly</p>
-            </div>
-            <div className="w-14 h-14 rounded-full bg-warning/20 flex items-center justify-center">
-              <span className="text-2xl font-bold text-warning">2</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-gradient-to-br from-primary/5 to-primary/10 rounded-xl border border-primary/20 p-5 card-hover shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold text-secondary uppercase tracking-wide mb-1">This Week</p>
-              <p className="text-lg font-bold text-primary">5 Updates</p>
-              <p className="text-xs text-secondary mt-1">Reviewed for you</p>
-            </div>
-            <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-2xl font-bold text-primary">5</span>
-            </div>
-          </div>
-        </div>
+    <div className="max-w-3xl mx-auto px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mb-6 fade-in text-center">
+        <p className="text-base sm:text-lg text-secondary italic mb-1" style={{ fontFamily: 'Georgia, serif' }}>
+          "News you understand, not just consume."
+        </p>
+        <p className="text-sm sm:text-base font-light tracking-wide mb-3" style={{ color: '#9CA3AF' }}>
+          From headlines to personal impact.
+        </p>
+        <div className="w-32 h-px bg-gray-300 mx-auto"></div>
       </div>
 
       <div className="mb-4">
@@ -150,6 +127,92 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Trending News Section */}
+      <div className="mb-8">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-1 h-6 bg-primary rounded-full"></div>
+          <h3 className="text-2xl font-bold text-primary">Trending Now</h3>
+          <span className="text-xs font-bold text-white bg-negative px-2 py-1 rounded-full uppercase tracking-wide">Live</span>
+        </div>
+
+        <div className="space-y-3">
+          {/* Trending Article 1 */}
+          <div className="bg-white border-l-4 border-primary rounded-lg p-4 shadow-sm hover:shadow-md transition-smooth cursor-pointer" onClick={() => navigate('/ask-ai', { state: { newsId: 'trend-1' } })}>
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1579532537598-459ecdaf39cc?w=400&q=80"
+                  alt="Trending"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold text-negative">🔥 TRENDING #1</span>
+                  <span className="text-xs text-secondary">• 15 mins ago</span>
+                </div>
+                <h4 className="text-sm font-bold text-primary mb-1 line-clamp-2">
+                  Rupee Hits All-Time Low Against Dollar: What It Means for Your Wallet
+                </h4>
+                <p className="text-xs text-secondary line-clamp-1">
+                  Currency depreciation impacts imports, travel, and inflation...
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Trending Article 2 */}
+          <div className="bg-white border-l-4 border-warning rounded-lg p-4 shadow-sm hover:shadow-md transition-smooth cursor-pointer" onClick={() => navigate('/ask-ai', { state: { newsId: 'trend-2' } })}>
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80"
+                  alt="Trending"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold text-warning">📈 TRENDING #2</span>
+                  <span className="text-xs text-secondary">• 1 hour ago</span>
+                </div>
+                <h4 className="text-sm font-bold text-primary mb-1 line-clamp-2">
+                  Stock Market Volatility: Expert Tips to Protect Your Portfolio
+                </h4>
+                <p className="text-xs text-secondary line-clamp-1">
+                  Market experts share strategies for uncertain times...
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Trending Article 3 */}
+          <div className="bg-white border-l-4 border-positive rounded-lg p-4 shadow-sm hover:shadow-md transition-smooth cursor-pointer" onClick={() => navigate('/ask-ai', { state: { newsId: 'trend-3' } })}>
+            <div className="flex gap-4">
+              <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=400&q=80"
+                  alt="Trending"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-xs font-bold text-positive">💼 TRENDING #3</span>
+                  <span className="text-xs text-secondary">• 2 hours ago</span>
+                </div>
+                <h4 className="text-sm font-bold text-primary mb-1 line-clamp-2">
+                  New Tax Benefits for First-Time Home Buyers Announced
+                </h4>
+                <p className="text-xs text-secondary line-clamp-1">
+                  Government unveils incentives to boost real estate sector...
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Recommended For You Section */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
@@ -183,7 +246,7 @@ export default function Home() {
                 <p className="text-xs text-secondary">4 mins ago</p>
               </div>
 
-              <h4 className="text-lg font-bold text-primary mb-3 leading-snug">
+              <h4 className="headline-font text-lg text-primary mb-3 leading-snug">
                 Fed Signals Potential Rate Hike Amid Inflation Concerns
               </h4>
 
@@ -222,7 +285,7 @@ export default function Home() {
                 <p className="text-xs text-secondary">1 hour ago</p>
               </div>
 
-              <h4 className="text-lg font-bold text-primary mb-3 leading-snug">
+              <h4 className="headline-font text-lg text-primary mb-3 leading-snug">
                 AI Startups Raise Record $12B in Q1 Funding
               </h4>
 

@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
-import Explore from './pages/Explore'
+import ExploreFull from './pages/ExploreFull'
 import AskAI from './pages/AskAI'
 import Profile from './pages/Profile'
 import PersonalImpact from './pages/PersonalImpact'
@@ -17,10 +17,10 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Navigate to="/home" replace />} />
           <Route path="home" element={<Home />} />
-          <Route path="explore" element={<Explore />} />
           <Route path="ask-ai" element={<AskAI />} />
           <Route path="profile" element={<Profile />} />
         </Route>
+        <Route path="/explore" element={<ExploreFull />} />
         <Route path="/personal-impact" element={<PersonalImpact />} />
         <Route path="/future-scenarios" element={<FutureScenarios />} />
         <Route path="/for-you" element={<ForYou />} />

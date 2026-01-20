@@ -42,7 +42,7 @@ export default function ForYou() {
                 <p className="text-xs text-secondary">4 mins ago</p>
               </div>
 
-              <h4 className="text-lg font-bold text-primary mb-3 leading-snug">
+              <h4 className="headline-font text-lg text-primary mb-3 leading-snug">
                 Fed Signals Potential Rate Hike Amid Inflation Concerns
               </h4>
 
@@ -81,7 +81,7 @@ export default function ForYou() {
                 <p className="text-xs text-secondary">1 hour ago</p>
               </div>
 
-              <h4 className="text-lg font-bold text-primary mb-3 leading-snug">
+              <h4 className="headline-font text-lg text-primary mb-3 leading-snug">
                 AI Startups Raise Record $12B in Q1 Funding
               </h4>
 
@@ -120,7 +120,7 @@ export default function ForYou() {
                 <p className="text-xs text-secondary">3 hours ago</p>
               </div>
 
-              <h4 className="text-lg font-bold text-primary mb-3 leading-snug">
+              <h4 className="headline-font text-lg text-primary mb-3 leading-snug">
                 Property Prices in Metro Cities Rise 8% YoY
               </h4>
 
@@ -159,7 +159,7 @@ export default function ForYou() {
                 <p className="text-xs text-secondary">5 hours ago</p>
               </div>
 
-              <h4 className="text-lg font-bold text-primary mb-3 leading-snug">
+              <h4 className="headline-font text-lg text-primary mb-3 leading-snug">
                 Bitcoin Surges Past $65K on ETF Approval News
               </h4>
 
@@ -198,7 +198,7 @@ export default function ForYou() {
                 <p className="text-xs text-secondary">6 hours ago</p>
               </div>
 
-              <h4 className="text-lg font-bold text-primary mb-3 leading-snug">
+              <h4 className="headline-font text-lg text-primary mb-3 leading-snug">
                 New Health Insurance Regulations Announced
               </h4>
 

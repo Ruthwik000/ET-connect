@@ -105,7 +105,7 @@ export default function SavedNews() {
                       </div>
                     </div>
 
-                    <h3 className="text-lg font-bold text-primary mb-3 leading-snug">
+                    <h3 className="headline-font text-lg text-primary mb-3 leading-snug">
                       {news.headline}
                     </h3>
 
