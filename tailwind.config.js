@@ -21,7 +21,8 @@ export default {
         background: '#fafafa'
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif']
+        sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['Georgia', 'serif']
       }
     },
   },

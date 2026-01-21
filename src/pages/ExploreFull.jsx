@@ -345,17 +345,7 @@ export default function ExploreFull() {
           </div>
         </div>
 
-        {/* Progress Indicator */}
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 px-4 pointer-events-none">
-          {filteredNews.map((_, idx) => (
-            <div
-              key={idx}
-              className={`h-1 rounded-full transition-all ${
-                idx === currentIndex ? 'w-8 bg-primary' : 'w-1 bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
+        {/* Progress Indicator - Removed */}
       </div>
     </div>
   )
