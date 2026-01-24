@@ -1,187 +1,103 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Search, Bookmark, ChevronDown } from 'lucide-react'
 import { getImpactLevel } from '../utils/helpers'
-import { categorizeArticle } from '../utils/categorize'
-import { useAuth } from '../context/AuthContext'
-import { saveNewsBookmark, getUserBookmarks, removeNewsBookmark } from '../firebase/firestore'
-import { api } from '../utils/api'
 
 export default function ExploreFull() {
   const navigate = useNavigate()
-  const { currentUser, userProfile } = useAuth()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false)
   const [direction, setDirection] = useState('next')
   const [savedNews, setSavedNews] = useState([])
-  const [bookmarkIds, setBookmarkIds] = useState({})
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('All')
-  const [allNews, setAllNews] = useState([])
-  const [loading, setLoading] = useState(true)
+  const [selectedCategory, setSelectedCategory] = useState('Economy')
 
-  const categories = ['All', 'Finance', 'Technology', 'Policy', 'Career', 'Markets', 'Business', 'Health']
+  const categories = ['Economy', 'Markets', 'Tech', 'Politics', 'Opinion', 'World', 'India']
 
-  // Fetch real news from backend
-  useEffect(() => {
-    async function fetchNews() {
-      if (!userProfile?.age || !userProfile?.goals || !userProfile?.interests) {
-        setLoading(false)
-        return
-      }
-
-      try {
-        setLoading(true)
-        
-        const goalsString = Array.isArray(userProfile.goals) 
-          ? userProfile.goals.join(', ') 
-          : userProfile.goals
-        
-        const interests = userProfile.interests || ['technology', 'business', 'finance']
-        
-        const data = await api.getPersonalizedNews({
-          age: userProfile.age,
-          goals: goalsString,
-          interests: interests,
-          k: 3
-        })
-        
-        // Transform backend news to match our format
-        const transformedNews = []
-        let id = 1
-        
-        for (const [interest, articles] of Object.entries(data.news_by_interest)) {
-          articles.forEach(article => {
-            const category = categorizeArticle(article, interest)
-            transformedNews.push({
-              id: `news-${id++}`,
-              headline: article.title,
-              summary: article.content || article.snippet || 'No summary available',
-              category: category,
-              impactScore: Math.floor(Math.random() * 3) + 6,
-              impactLevel: getImpactLevel(Math.floor(Math.random() * 3) + 6),
-              source: article.source,
-              timestamp: article.date || 'Recently',
-              location: interest,
-              impactSource: category,
-              image: article.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'
-            })
-          })
-        }
-        
-        setAllNews(transformedNews)
-      } catch (err) {
-        console.error('Error fetching news:', err)
-      } finally {
-        setLoading(false)
-      }
+  const allNews = [
+    {
+      id: '1',
+      headline: 'Indian Markets Reach Record High Amid Global Rally',
+      summary: 'The Nifty 50 and Sensex touched new peaks today, driven by strong inflows from foreign institutional investors and positive sentiment in the tech sector. Analysts suggest this trend might continue for the next quarter as domestic manufacturing indices show resilience. Market experts attribute the rally to improved corporate earnings, favorable monetary policy, and increased retail participation in equity markets.',
+      category: 'Finance',
+      impactScore: 8.5,
+      impactLevel: getImpactLevel(8.5),
+      source: 'Economic Times',
+      timestamp: '2h ago',
+      location: 'Mumbai',
+      impactSource: 'Finance',
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80'
+    },
+    {
+      id: '2',
+      headline: 'New Tax Deduction Rules for Salaried Employees',
+      summary: 'The government has revised Section 80C deduction limits, allowing higher tax savings for investments in specified instruments. The new limit is ₹2 lakh per year, up from ₹1.5 lakh. This change is expected to benefit middle-class taxpayers significantly and encourage long-term savings. Financial advisors recommend reviewing your investment portfolio to maximize these benefits before the fiscal year ends.',
+      category: 'Policy',
+      impactScore: 6,
+      impactLevel: getImpactLevel(6),
+      source: 'Business Standard',
+      timestamp: '5h ago',
+      location: 'New Delhi',
+      impactSource: 'Finance',
+      image: 'https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=800&q=80'
+    },
+    {
+      id: '3',
+      headline: 'Tech Hiring Slowdown Expected in Q2',
+      summary: 'Major IT companies including TCS, Infosys, and Wipro have announced a hiring freeze for the next quarter amid global economic uncertainty and reduced client spending. Industry experts predict this could impact freshers and mid-level professionals the most. However, specialized roles in AI, cloud computing, and cybersecurity continue to see demand. Career counselors advise upskilling and diversifying skill sets during this period.',
+      category: 'Career',
+      impactScore: 7,
+      impactLevel: getImpactLevel(7),
+      source: 'Mint',
+      timestamp: '1d ago',
+      location: 'Bangalore',
+      impactSource: 'Career',
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80'
+    },
+    {
+      id: '4',
+      headline: 'AI Revolution Transforms Indian Tech Landscape',
+      summary: 'Indian technology companies are rapidly adopting artificial intelligence and machine learning solutions across various sectors. From healthcare to finance, AI is reshaping how businesses operate and deliver services.',
+      category: 'Technology',
+      impactScore: 7.5,
+      impactLevel: getImpactLevel(7.5),
+      source: 'Tech Crunch',
+      timestamp: '3h ago',
+      location: 'Bangalore',
+      impactSource: 'Technology',
+      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&q=80'
+    },
+    {
+      id: '5',
+      headline: 'Stock Market Volatility Continues Amid Global Uncertainty',
+      summary: 'Indian stock markets experienced significant volatility as global economic concerns and geopolitical tensions impact investor sentiment. Experts advise caution and diversification.',
+      category: 'Markets',
+      impactScore: 6.5,
+      impactLevel: getImpactLevel(6.5),
+      source: 'Bloomberg',
+      timestamp: '4h ago',
+      location: 'Mumbai',
+      impactSource: 'Markets',
+      image: 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80'
     }
-
-    fetchNews()
-  }, [userProfile])
-
-  // Load saved news on mount
-  useEffect(() => {
-    const loadSavedNews = async () => {
-      if (!currentUser) return
-      
-      const result = await getUserBookmarks(currentUser.uid)
-      if (result.success) {
-        const savedIds = result.data.map(bookmark => bookmark.newsId)
-        const idMap = {}
-        result.data.forEach(bookmark => {
-          idMap[bookmark.newsId] = bookmark.id
-        })
-        setSavedNews(savedIds)
-        setBookmarkIds(idMap)
-      }
-    }
-    
-    loadSavedNews()
-  }, [currentUser])
+  ]
 
   // Filter news based on selected category
-  const filteredNews = selectedCategory === 'All' 
+  const filteredNews = selectedCategory === 'Economy' 
     ? allNews 
-    : allNews.filter(news => news.category === selectedCategory)
+    : allNews.filter(news => {
+        const categoryMap = {
+          'Markets': ['Finance', 'Markets'],
+          'Tech': ['Technology', 'Career'],
+          'Politics': ['Policy'],
+          'Opinion': ['Opinion'],
+          'World': ['Finance', 'Markets'],
+          'India': ['Policy', 'Career']
+        }
+        return categoryMap[selectedCategory]?.includes(news.category) || false
+      })
 
   const currentNews = filteredNews[currentIndex]
-
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="fixed inset-0 bg-background overflow-hidden flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-secondary">Loading news...</p>
-        </div>
-      </div>
-    )
-  }
-
-  // If no news in filtered category, show empty state
-  if (filteredNews.length === 0) {
-    return (
-      <div className="fixed inset-0 bg-background overflow-hidden">
-        {/* Header */}
-        <div className="absolute top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
-          <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 lg:px-6 h-12 sm:h-14 max-w-7xl mx-auto">
-            <button
-              onClick={() => navigate('/home')}
-              className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-smooth btn-press flex-shrink-0"
-            >
-              <ArrowLeft size={20} className="text-primary sm:w-6 sm:h-6" />
-            </button>
-            <h1 className="text-lg font-bold text-primary">Explore News</h1>
-          </div>
-
-          {/* Category Filter */}
-          <div className="overflow-x-auto scrollbar-hide border-t border-gray-100">
-            <div className="flex gap-4 sm:gap-6 lg:gap-8 px-3 sm:px-4 lg:px-6 py-2 sm:py-3 min-w-max max-w-7xl mx-auto">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => {
-                    setSelectedCategory(category)
-                    setCurrentIndex(0)
-                  }}
-                  className={`text-xs sm:text-sm font-semibold uppercase tracking-wide whitespace-nowrap transition-smooth relative pb-1 ${
-                    selectedCategory === category
-                      ? 'text-primary'
-                      : 'text-secondary hover:text-primary'
-                  }`}
-                >
-                  {category}
-                  {selectedCategory === category && (
-                    <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"></div>
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Empty State */}
-        <div className="absolute top-[96px] bottom-0 left-0 right-0 flex items-center justify-center">
-          <div className="text-center px-4">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search size={32} className="text-secondary" />
-            </div>
-            <h3 className="text-lg font-bold text-primary mb-2">No news found</h3>
-            <p className="text-sm text-secondary mb-4">
-              No articles available in the {selectedCategory} category
-            </p>
-            <button
-              onClick={() => setSelectedCategory('All')}
-              className="bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-light transition-smooth btn-press"
-            >
-              View All News
-            </button>
-          </div>
-        </div>
-      </div>
-    )
-  }
 
   const handleNext = () => {
     if (isAnimating || currentIndex >= filteredNews.length - 1) return
@@ -213,53 +129,12 @@ export default function ExploreFull() {
     navigate('/future-scenarios', { state: { newsId: currentNews.id } })
   }
 
-  const handleSave = async (e) => {
+  const handleSave = (e) => {
     e.stopPropagation()
-    
-    if (!currentUser) {
-      alert('Please login to save news')
-      return
-    }
-    
     if (savedNews.includes(currentNews.id)) {
-      // Remove bookmark
-      const bookmarkId = bookmarkIds[currentNews.id]
-      if (bookmarkId) {
-        const result = await removeNewsBookmark(bookmarkId)
-        if (result.success) {
-          setSavedNews(savedNews.filter(id => id !== currentNews.id))
-          const newBookmarkIds = { ...bookmarkIds }
-          delete newBookmarkIds[currentNews.id]
-          setBookmarkIds(newBookmarkIds)
-        }
-      }
+      setSavedNews(savedNews.filter(id => id !== currentNews.id))
     } else {
-      // Save bookmark
-      const newsData = {
-        newsId: currentNews.id,
-        headline: currentNews.headline,
-        summary: currentNews.summary,
-        category: currentNews.category,
-        impactScore: currentNews.impactScore,
-        impactLevel: currentNews.impactLevel,
-        source: currentNews.source,
-        timestamp: currentNews.timestamp,
-        location: currentNews.location,
-        image: currentNews.image
-      }
-      
-      const result = await saveNewsBookmark(currentUser.uid, newsData)
-      if (result.success) {
-        setSavedNews([...savedNews, currentNews.id])
-        // Fetch the bookmark ID
-        const bookmarksResult = await getUserBookmarks(currentUser.uid)
-        if (bookmarksResult.success) {
-          const bookmark = bookmarksResult.data.find(b => b.newsId === currentNews.id)
-          if (bookmark) {
-            setBookmarkIds({ ...bookmarkIds, [currentNews.id]: bookmark.id })
-          }
-        }
-      }
+      setSavedNews([...savedNews, currentNews.id])
     }
   }
 

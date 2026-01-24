@@ -1,34 +1,12 @@
 import { Bell, Menu, Settings, Bookmark, LogOut, X } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { logOut } from '../firebase/auth'
-import { useAuth } from '../context/AuthContext'
-import { getUserNotifications } from '../firebase/firestore'
 
 export default function TopNav() {
   const navigate = useNavigate()
-  const { currentUser } = useAuth()
+  const hasHighImpactNews = true
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [unreadCount, setUnreadCount] = useState(0)
-
-  // Load unread notification count
-  useEffect(() => {
-    const loadUnreadCount = async () => {
-      if (!currentUser) return
-      
-      const result = await getUserNotifications(currentUser.uid)
-      if (result.success) {
-        const unread = result.data.filter(n => !n.read).length
-        setUnreadCount(unread)
-      }
-    }
-    
-    loadUnreadCount()
-    
-    // Refresh every 30 seconds
-    const interval = setInterval(loadUnreadCount, 30000)
-    return () => clearInterval(interval)
-  }, [currentUser])
 
   const handleMenuClick = (path) => {
     navigate(path)
@@ -78,13 +56,8 @@ export default function TopNav() {
             className="relative p-2 hover:bg-gray-100 rounded-xl transition-smooth btn-press z-10 ml-auto"
           >
             <Bell size={24} className="text-primary" />
-            {unreadCount > 0 && (
-              <>
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-negative rounded-full animate-pulse" />
-                <span className="absolute -top-1 -right-1 bg-negative text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                  {unreadCount > 9 ? '9+' : unreadCount}
-                </span>
-              </>
+            {hasHighImpactNews && (
+              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-negative rounded-full animate-pulse" />
             )}
           </button>
         </div>
