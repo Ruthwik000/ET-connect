@@ -14,13 +14,15 @@ export default function Survey() {
     profession: '',
     income: '',
     goals: [],
-    commitments: []
+    commitments: [],
+    interests: []
   })
 
   const professions = ['Student', 'Engineer', 'Doctor', 'Business Owner', 'Freelancer', 'Other']
   const incomeRanges = ['< ₹5L', '₹5-10L', '₹10-20L', '₹20-50L', '> ₹50L']
   const goalOptions = ['Buy Home', 'Retirement', 'Education', 'Investment', 'Travel']
   const commitmentOptions = ['Home Loan', 'Car Loan', 'Rent', 'Education Loan', 'None']
+  const interestOptions = ['Technology', 'Business', 'Finance', 'Health', 'Sports', 'Entertainment', 'Politics', 'Science']
 
   const toggleSelection = (array, item) => {
     if (array.includes(item)) {
@@ -30,7 +32,7 @@ export default function Survey() {
   }
 
   const handleNext = async () => {
-    if (step < 5) {
+    if (step < 6) {
       setStep(step + 1)
     } else {
       // Save profile to Firestore
@@ -63,7 +65,7 @@ export default function Survey() {
     navigate('/home')
   }
 
-  const progress = (step / 5) * 100
+  const progress = (step / 6) * 100
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -213,13 +215,42 @@ export default function Survey() {
             </div>
           )}
 
+          {/* Step 6: Interests */}
+          {step === 6 && (
+            <div className="fade-in">
+              <h2 className="text-3xl font-bold text-primary mb-2">Your Interests</h2>
+              <p className="text-secondary mb-8">Select topics you want to follow (at least 3)</p>
+              
+              <div className="grid grid-cols-2 gap-3">
+                {interestOptions.map(interest => (
+                  <button
+                    key={interest}
+                    onClick={() => setProfile({ ...profile, interests: toggleSelection(profile.interests, interest.toLowerCase()) })}
+                    className={`p-4 rounded-lg border-2 font-semibold transition-smooth ${
+                      profile.interests.includes(interest.toLowerCase())
+                        ? 'border-primary bg-primary/5 text-primary'
+                        : 'border-gray-300 text-secondary hover:border-gray-400'
+                    }`}
+                  >
+                    {interest}
+                  </button>
+                ))}
+              </div>
+              {profile.interests.length > 0 && (
+                <p className="text-sm text-secondary mt-4 text-center">
+                  {profile.interests.length} selected (minimum 3)
+                </p>
+              )}
+            </div>
+          )}
+
           {/* Next Button */}
           <button
             onClick={handleNext}
-            disabled={loading}
+            disabled={loading || (step === 6 && profile.interests.length < 3)}
             className="w-full mt-8 py-4 bg-primary text-white rounded-lg font-semibold text-lg hover:bg-primary-light transition-smooth btn-press shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {loading ? 'Saving...' : (step === 5 ? 'Complete' : 'Continue')}
+            {loading ? 'Saving...' : (step === 6 ? 'Complete' : 'Continue')}
             <ChevronRight size={24} />
           </button>
         </div>
