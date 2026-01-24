@@ -16,16 +16,9 @@ export default function NewsCard({ news, onViewImpact }) {
       )}
 
       <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-semibold text-secondary bg-gray-100 px-3 py-1.5 rounded-full">
-            {news.category}
-          </span>
-          {news.personalized && (
-            <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full flex items-center gap-1">
-              ✨ For You
-            </span>
-          )}
-        </div>
+        <span className="text-xs font-semibold text-secondary bg-gray-100 px-3 py-1.5 rounded-full">
+          {news.category}
+        </span>
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${getImpactBgColor(news.impactLevel)}`}>
           <span className={`text-2xl font-bold ${getImpactColor(news.impactLevel)}`}>
             {news.impactScore}
