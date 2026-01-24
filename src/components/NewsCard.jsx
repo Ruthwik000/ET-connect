@@ -1,6 +1,17 @@
 import { getImpactColor, getImpactBgColor } from '../utils/helpers'
+import { useNavigate } from 'react-router-dom'
 
 export default function NewsCard({ news, onViewImpact }) {
+  const navigate = useNavigate()
+  
+  const handleKnowMore = () => {
+    navigate('/ask-ai', {
+      state: {
+        newsData: news
+      }
+    })
+  }
+  
   return (
     <div className="bg-white rounded-xl border border-gray-200 p-5 mb-4 card-hover shadow-sm overflow-hidden">
       {/* News Image */}
@@ -16,9 +27,11 @@ export default function NewsCard({ news, onViewImpact }) {
       )}
 
       <div className="flex items-start justify-between gap-3 mb-3">
-        <span className="text-xs font-semibold text-secondary bg-gray-100 px-3 py-1.5 rounded-full">
-          {news.category}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-semibold text-secondary bg-gray-100 px-3 py-1.5 rounded-full">
+            {news.category}
+          </span>
+        </div>
         <div className={`flex items-center gap-2 px-3 py-1.5 rounded-lg ${getImpactBgColor(news.impactLevel)}`}>
           <span className={`text-2xl font-bold ${getImpactColor(news.impactLevel)}`}>
             {news.impactScore}
@@ -41,13 +54,13 @@ export default function NewsCard({ news, onViewImpact }) {
 
       <div className="flex gap-3">
         <button
-          onClick={() => onViewImpact(news.id)}
+          onClick={() => onViewImpact(news)}
           className="flex-1 bg-primary text-white py-3 rounded-lg font-semibold text-sm hover:bg-primary-light transition-smooth btn-press shadow-sm hover:shadow-md"
         >
           View Impact Report
         </button>
         <button
-          onClick={() => onViewImpact(news.id)}
+          onClick={handleKnowMore}
           className="px-5 bg-gray-100 text-primary py-3 rounded-lg font-semibold text-sm hover:bg-gray-200 transition-smooth btn-press"
         >
           Know More

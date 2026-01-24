@@ -69,3 +69,34 @@ export const saveUserPreferences = async (userId, preferences) => {
     return { success: false, error: error.message }
   }
 }
+
+// Save recommended interests (cache LLM result)
+export const saveRecommendedInterests = async (userId, interests) => {
+  try {
+    await updateDoc(doc(db, 'users', userId), {
+      recommendedInterests: interests,
+      interestsUpdatedAt: new Date().toISOString()
+    })
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+}
+
+// Get recommended interests from cache
+export const getRecommendedInterests = async (userId) => {
+  try {
+    const userDoc = await getDoc(doc(db, 'users', userId))
+    if (userDoc.exists()) {
+      const data = userDoc.data()
+      return { 
+        success: true, 
+        data: data.recommendedInterests || null,
+        updatedAt: data.interestsUpdatedAt || null
+      }
+    }
+    return { success: false, error: 'User not found' }
+  } catch (error) {
+    return { success: false, error: error.message }
+  }
+}
