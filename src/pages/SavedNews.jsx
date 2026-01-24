@@ -1,44 +1,34 @@
-import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Bookmark } from 'lucide-react'
-import { useAuth } from '../context/AuthContext'
-import { getUserBookmarks, removeNewsBookmark } from '../firebase/firestore'
 
 export default function SavedNews() {
   const navigate = useNavigate()
-  const { currentUser } = useAuth()
-  const [savedNews, setSavedNews] = useState([])
-  const [loading, setLoading] = useState(true)
 
-  // Load saved news on mount
-  useEffect(() => {
-    const loadSavedNews = async () => {
-      if (!currentUser) {
-        setLoading(false)
-        return
-      }
-      
-      const result = await getUserBookmarks(currentUser.uid)
-      if (result.success) {
-        // Sort by savedAt timestamp (most recent first)
-        const sortedBookmarks = result.data.sort((a, b) => 
-          new Date(b.savedAt) - new Date(a.savedAt)
-        )
-        setSavedNews(sortedBookmarks)
-      }
-      setLoading(false)
+  // Mock saved news data
+  const savedNews = [
+    {
+      id: '1',
+      headline: 'Indian Markets Reach Record High Amid Global Rally',
+      category: 'Finance',
+      impactScore: 8.5,
+      impactLevel: 'High',
+      source: 'Economic Times',
+      timestamp: '2h ago',
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=800&q=80',
+      savedAt: '2 hours ago'
+    },
+    {
+      id: '3',
+      headline: 'Tech Hiring Slowdown Expected in Q2',
+      category: 'Career',
+      impactScore: 7,
+      impactLevel: 'High',
+      source: 'Mint',
+      timestamp: '1d ago',
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&q=80',
+      savedAt: '1 day ago'
     }
-    
-    loadSavedNews()
-  }, [currentUser])
-
-  const handleRemoveBookmark = async (e, bookmarkId) => {
-    e.stopPropagation()
-    const result = await removeNewsBookmark(bookmarkId)
-    if (result.success) {
-      setSavedNews(savedNews.filter(news => news.id !== bookmarkId))
-    }
-  }
+  ]
 
   const handleViewNews = (newsId) => {
     navigate('/ask-ai', { state: { newsId } })
@@ -62,31 +52,6 @@ export default function SavedNews() {
     }
   }
 
-  const formatSavedTime = (savedAt) => {
-    const now = new Date()
-    const saved = new Date(savedAt)
-    const diffMs = now - saved
-    const diffMins = Math.floor(diffMs / 60000)
-    const diffHours = Math.floor(diffMs / 3600000)
-    const diffDays = Math.floor(diffMs / 86400000)
-
-    if (diffMins < 60) return `${diffMins} minutes ago`
-    if (diffHours < 24) return `${diffHours} hours ago`
-    if (diffDays === 1) return '1 day ago'
-    return `${diffDays} days ago`
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background pb-20 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-secondary">Loading saved news...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className="min-h-screen bg-background pb-20">
       {/* Header */}
@@ -108,22 +73,21 @@ export default function SavedNews() {
                 <div
                   key={news.id}
                   className="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm card-hover cursor-pointer"
-                  onClick={() => handleViewNews(news.newsId)}
+                  onClick={() => handleViewNews(news.id)}
                 >
                   {/* News Image */}
                   <div className="relative h-48 overflow-hidden">
                     <img 
-                      src={news.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80'} 
+                      src={news.image} 
                       alt={news.headline}
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20" />
-                    <button
-                      onClick={(e) => handleRemoveBookmark(e, news.id)}
-                      className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm p-2 rounded-lg hover:bg-white transition-smooth"
-                    >
-                      <Bookmark size={20} className="text-primary" fill="currentColor" />
-                    </button>
+                    <div className="absolute top-4 right-4">
+                      <div className="bg-white/90 backdrop-blur-sm p-2 rounded-lg">
+                        <Bookmark size={20} className="text-primary" fill="currentColor" />
+                      </div>
+                    </div>
                   </div>
 
                   <div className="p-5">
@@ -147,7 +111,7 @@ export default function SavedNews() {
 
                     <div className="flex items-center justify-between text-xs text-secondary">
                       <span>{news.source} • {news.timestamp}</span>
-                      <span>Saved {formatSavedTime(news.savedAt)}</span>
+                      <span>Saved {news.savedAt}</span>
                     </div>
                   </div>
                 </div>

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import NewsCard from '../components/NewsCard'
 import { getImpactLevel } from '../utils/helpers'
-import { categorizeArticle } from '../utils/categorize'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
 import { getRecommendedInterests, saveRecommendedInterests } from '../firebase/firestore'
@@ -72,25 +71,23 @@ export default function Home() {
         }
         
         // Transform backend news to match our format
-        // Headlines are already personalized by the backend!
         const transformedNews = []
         let id = 1
         
         for (const [interest, articles] of Object.entries(data.news_by_interest)) {
           articles.forEach(article => {
-            const category = categorizeArticle(article, interest)
             transformedNews.push({
               id: `news-${id++}`,
-              headline: article.title, // Already personalized!
+              headline: article.title,
               summary: article.content || article.snippet || 'No summary available',
               content: article.content,
-              category: category,
+              category: interest.charAt(0).toUpperCase() + interest.slice(1),
               impactScore: Math.floor(Math.random() * 3) + 6,
               impactLevel: getImpactLevel(Math.floor(Math.random() * 3) + 6),
-              impactSummary: `Relevant to your ${category.toLowerCase()} interests`,
+              impactSummary: `Relevant to your ${interest.toLowerCase()} interests`,
               source: article.source,
               timestamp: article.date || 'Recently',
-              impactSource: category,
+              impactSource: interest,
               image: article.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80',
               link: article.link
             })
