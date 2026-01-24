@@ -129,32 +129,53 @@ export const api = {
   },
 
   /**
-   * Personalize a single headline
+   * Generate impact report for a news article
    */
-  async personalizeHeadline(article, userProfile) {
-    const response = await fetch(`${API_BASE_URL}/personalize-headline`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+  async generateImpactReport(article, userProfile) {
+    try {
+      console.log('Sending impact report request:', {
         article: {
-          title: article.title || article.headline,
-          content: article.content || article.summary,
-          category: article.category
+          title: article.headline || article.title,
+          source: article.source,
         },
-        user_profile: {
+        userProfile: {
           age: userProfile.age,
-          goals: userProfile.goals
+          profession: userProfile.profession
         }
-      })
-    });
-    
-    if (!response.ok) {
-      throw new Error('Failed to personalize headline');
+      });
+
+      const response = await fetch(`${API_BASE_URL}/generate-impact-report`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          article: {
+            title: article.headline || article.title,
+            link: article.link || '',
+            source: article.source,
+            snippet: article.summary?.substring(0, 200),
+            date: article.timestamp || article.date,
+            content: article.content || article.summary,
+            image: article.image
+          },
+          user_profile: userProfile
+        })
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Backend error:', errorData);
+        throw new Error(errorData.detail || `HTTP ${response.status}: Failed to generate impact report`);
+      }
+      
+      const data = await response.json();
+      console.log('Impact report generated successfully:', data);
+      return data;
+    } catch (error) {
+      console.error('Error in generateImpactReport:', error);
+      throw error;
     }
-    
-    return response.json();
   }
 };
 

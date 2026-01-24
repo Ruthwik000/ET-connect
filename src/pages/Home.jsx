@@ -5,6 +5,7 @@ import { getImpactLevel } from '../utils/helpers'
 import { categorizeArticle } from '../utils/categorize'
 import { useAuth } from '../context/AuthContext'
 import { api } from '../utils/api'
+import { getRecommendedInterests, saveRecommendedInterests } from '../firebase/firestore'
 
 export default function Home() {
   const navigate = useNavigate()
@@ -15,15 +16,16 @@ export default function Home() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Fetch real news from backend with personalized headlines
+  // Fetch real news from backend
   useEffect(() => {
     async function fetchNews() {
       // Check if profile has the required fields
-      if (!userProfile?.age || !userProfile?.goals || !userProfile?.interests) {
+      if (!userProfile?.age || !userProfile?.goals || !userProfile?.interests || !userProfile?.uid) {
         console.log('Missing profile data:', { 
           age: userProfile?.age, 
           goals: userProfile?.goals, 
-          interests: userProfile?.interests 
+          interests: userProfile?.interests,
+          uid: userProfile?.uid
         })
         setLoading(false)
         return
@@ -40,14 +42,34 @@ export default function Home() {
         // Use interests or create default ones based on profession
         const interests = userProfile.interests || ['technology', 'business', 'finance']
         
-        console.log('Fetching personalized news with AI-generated headlines...')
+        // Check if we have cached recommended interests
+        console.log('Checking for cached interests...')
+        const cachedResult = await getRecommendedInterests(userProfile.uid)
+        let cachedInterests = null
+        
+        if (cachedResult.success && cachedResult.data) {
+          console.log('Found cached interests:', cachedResult.data)
+          cachedInterests = cachedResult.data
+        } else {
+          console.log('No cached interests found, LLM will select them')
+        }
+        
+        console.log('Fetching personalized news...')
         
         const data = await api.getPersonalizedNews({
           age: userProfile.age,
           goals: goalsString,
           interests: interests,
-          k: 3
+          k: 3,
+          userId: userProfile.uid,
+          cachedInterests: cachedInterests
         })
+        
+        // If we didn't have cached interests, save the ones returned by backend
+        if (!cachedInterests && data.recommended_interests) {
+          console.log('Caching recommended interests:', data.recommended_interests)
+          await saveRecommendedInterests(userProfile.uid, data.recommended_interests)
+        }
         
         // Transform backend news to match our format
         // Headlines are already personalized by the backend!
@@ -70,8 +92,7 @@ export default function Home() {
               timestamp: article.date || 'Recently',
               impactSource: category,
               image: article.image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&q=80',
-              link: article.link,
-              personalized: true // All headlines are personalized by default
+              link: article.link
             })
           })
         }
@@ -111,8 +132,8 @@ export default function Home() {
   }, [currentSlide])
 
   const handleViewImpact = (newsItem) => {
-    // Pass the full news object to AskAI page
-    navigate('/ask-ai', { 
+    // Pass the full news object to PersonalImpact page for impact report
+    navigate('/personal-impact', { 
       state: { 
         newsId: newsItem.id,
         newsData: newsItem
@@ -131,7 +152,7 @@ export default function Home() {
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-secondary">Loading personalized news with AI-generated headlines...</p>
+            <p className="text-secondary">Loading news...</p>
           </div>
         </div>
       </div>
@@ -193,7 +214,7 @@ export default function Home() {
       <div className="mb-4">
         <h3 className="text-xl font-bold text-primary mb-1">High Impact News</h3>
         <p className="text-sm text-secondary">
-          Personalized headlines showing how news impacts YOU
+          Curated news based on your interests and profile
         </p>
       </div>
 
